@@ -653,8 +653,13 @@ assertEqual(menu.webSearchTarget('localhost:3000'), 'http://localhost:3000', 'we
 assertEqual(menu.webSearchTarget('mailto:x@y.com'), 'mailto:x@y.com', 'web search keeps a non-http scheme')
 assertEqual(menu.webSearchTarget('chrome:settings'), 'chrome:settings', 'web search keeps a custom scheme')
 assertEqual(menu.webSearchTarget('localhost#frag'), 'http://localhost#frag', 'web search uses http for a localhost fragment')
-assertEqual(menu.webSearchTarget('example.com:8080'), 'example.com:8080', 'web search keeps a host with a port')
+assertEqual(menu.webSearchTarget('example.com:8080'), 'https://example.com:8080', 'web search adds https to a host with a port')
 assertEqual(menu.webSearchTarget('hola', 'https://duckduckgo.com/?q={searchTerms}'), 'https://duckduckgo.com/?q=hola', 'web search honors a custom template')
+assertEqual(menu.webSearchTarget('hola', 'http://intranet/search?q={searchTerms}'), 'http://intranet/search?q=hola', 'web search honors a plain http template')
+assertEqual(menu.webSearchTarget('hello', 'javascript:alert(1)//{searchTerms}'), 'https://www.google.com/search?q=hello', 'web search rejects a javascript template')
+assertEqual(menu.webSearchTarget('shadow', 'file:///etc/{searchTerms}'), 'https://www.google.com/search?q=shadow', 'web search rejects a file template')
+assertEqual(menu.webSearchTarget('hello', '--flag-injected={searchTerms}'), 'https://www.google.com/search?q=hello', 'web search rejects a template that starts with a dash')
+assertEqual(menu.webSearchTarget('hello', '--private'), 'https://www.google.com/search?q=hello', 'web search rejects a bare flag as a template')
 JS
 
 font_charset=$(fc-query --format='%{charset}' "$ROOT/default/fonts/omarchy/omarchy.ttf")
