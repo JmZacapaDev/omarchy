@@ -511,7 +511,11 @@ function webSearchTarget(query, template) {
     if (/^[a-z][a-z0-9+.-]*:/i.test(q)) return q
     return "https://" + q
   }
-  var tpl = String(template || "https://www.google.com/search?q={searchTerms}")
+  var tpl = String(template || "")
+  // Only an http(s) template may reach the browser: anything else lets whatever
+  // writes shell.json choose the scheme (javascript:, file:) or pass a leading
+  // dash that the browser parses as a flag rather than a URL.
+  if (!/^https?:\/\//i.test(tpl)) tpl = "https://www.google.com/search?q={searchTerms}"
   return tpl.split("{searchTerms}").join(encodeURIComponent(q))
 }
 
