@@ -165,6 +165,8 @@ While a search query is typed, the menu appends a fallback row that opens the de
 }
 ```
 
+The template must begin with `http://` or `https://`. Anything else falls back to the Google default, so whatever writes `shell.json` cannot choose the scheme the browser opens or pass it a leading dash it would read as a flag.
+
 The URL-vs-search decision and template substitution live in `webSearchLooksLikeUrl` and `webSearchTarget` in `MenuModel.js`, so the shell tests exercise them directly.
 
 ## Select and input modes
